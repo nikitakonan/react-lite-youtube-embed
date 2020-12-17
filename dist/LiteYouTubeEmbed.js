@@ -2,6 +2,13 @@ import _slicedToArray from "@babel/runtime/helpers/esm/slicedToArray";
 import React, { Fragment, useState } from "react";
 import "./LiteYouTubeEmbed.css";
 
+var qsSerialize = function qsSerialize() {
+  var o = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  return Object.keys(o).map(function (i) {
+    return "".concat(encodeURIComponent(i), "=").concat(encodeURIComponent(o[i]));
+  }).join('&');
+};
+
 var LiteYouTubeEmbed = function LiteYouTubeEmbed(_ref) {
   var adNetwork = _ref.adNetwork,
       id = _ref.id,
@@ -12,7 +19,9 @@ var LiteYouTubeEmbed = function LiteYouTubeEmbed(_ref) {
       activatedClass = _ref.activatedClass,
       iframeClass = _ref.iframeClass,
       playerClass = _ref.playerClass,
-      wrapperClass = _ref.wrapperClass;
+      wrapperClass = _ref.wrapperClass,
+      iFrameOptions = _ref.iFrameOptions,
+      iFrameProps = _ref.iFrameProps;
 
   var _useState = useState(false),
       _useState2 = _slicedToArray(_useState, 2),
@@ -28,7 +37,8 @@ var LiteYouTubeEmbed = function LiteYouTubeEmbed(_ref) {
   var videoTitle = title;
   var posterUrl = "https://i.ytimg.com/vi/".concat(videoId, "/").concat(poster, ".jpg");
   var ytUrl = noCookie ? "https://www.youtube-nocookie.com" : "https://www.youtube.com";
-  var iframeSrc = !playlist ? "".concat(ytUrl, "/embed/").concat(videoId, "?autoplay=1") : "".concat(ytUrl, "/embed/videoseries?list=").concat(videoId);
+  var params = qsSerialize(iFrameOptions);
+  var iframeSrc = !playlist ? "".concat(ytUrl, "/embed/").concat(videoId, "?autoplay=1").concat(params ? "&".concat(params) : '') : "".concat(ytUrl, "/embed/videoseries?list=").concat(videoId).concat(params ? "&".concat(params) : '');
 
   var warmConnections = function warmConnections() {
     if (preconnected) return;
@@ -66,7 +76,7 @@ var LiteYouTubeEmbed = function LiteYouTubeEmbed(_ref) {
     }
   }, React.createElement("div", {
     className: playerClass
-  }), iframe && React.createElement("iframe", {
+  }), iframe && React.createElement("iframe", Object.assign({
     className: iframeClass,
     title: videoTitle,
     width: "560",
@@ -75,7 +85,7 @@ var LiteYouTubeEmbed = function LiteYouTubeEmbed(_ref) {
     allow: "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture",
     allowFullScreen: true,
     src: iframeSrc
-  })));
+  }, iFrameProps))));
 };
 
 LiteYouTubeEmbed.defaultProps = {
@@ -88,6 +98,7 @@ LiteYouTubeEmbed.defaultProps = {
   activatedClass: "lyt-activated",
   iframeClass: "",
   playerClass: "lty-playbtn",
-  wrapperClass: "yt-lite"
+  wrapperClass: "yt-lite",
+  iFrameOptions: {}
 };
 export default LiteYouTubeEmbed;

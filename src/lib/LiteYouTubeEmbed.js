@@ -3,7 +3,11 @@ import PropTypes from "prop-types";
 
 import "./LiteYouTubeEmbed.css";
 
-const LiteYouTubeEmbed = ({ adNetwork, id, playlist, poster, title, noCookie, activatedClass, iframeClass, playerClass, wrapperClass
+const qsSerialize = (o = {}) => Object.keys(o)
+  .map(i =>`${encodeURIComponent(i)}=${encodeURIComponent(o[i])}`)
+  .join('&');
+
+const LiteYouTubeEmbed = ({ adNetwork, id, playlist, poster, title, noCookie, activatedClass, iframeClass, playerClass, wrapperClass, iFrameOptions, iFrameProps
 }) => {
 
   const [preconnected, setPreconnected] = useState(false);
@@ -14,9 +18,10 @@ const LiteYouTubeEmbed = ({ adNetwork, id, playlist, poster, title, noCookie, ac
   const ytUrl = noCookie
     ? "https://www.youtube-nocookie.com"
     : "https://www.youtube.com";
+  const params = qsSerialize(iFrameOptions);
   const iframeSrc = !playlist
-    ? `${ytUrl}/embed/${videoId}?autoplay=1`
-    : `${ytUrl}/embed/videoseries?list=${videoId}`;
+    ? `${ytUrl}/embed/${videoId}?autoplay=1${params ? `&${params}` : ''}`
+    : `${ytUrl}/embed/videoseries?list=${videoId}${params ? `&${params}` : ''}`;
 
   const warmConnections = () => {
     if (preconnected) return;
@@ -64,6 +69,7 @@ const LiteYouTubeEmbed = ({ adNetwork, id, playlist, poster, title, noCookie, ac
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             src={iframeSrc}
+            {...iFrameProps}
           ></iframe>
         )}
       </div>
@@ -81,7 +87,9 @@ LiteYouTubeEmbed.propTypes = {
   activatedClass: PropTypes.string,
   iframeClass: PropTypes.string,
   playerClass: PropTypes.string,
-  wrapperClass: PropTypes.string
+  wrapperClass: PropTypes.string,
+  iFrameOptions: PropTypes.object,
+  iFrameProps: PropTypes.object,
 };
 
 LiteYouTubeEmbed.defaultProps = {
@@ -95,6 +103,7 @@ LiteYouTubeEmbed.defaultProps = {
   iframeClass: "",
   playerClass: "lty-playbtn",
   wrapperClass: "yt-lite",
+  iFrameOptions: {},
 };
 
 export default LiteYouTubeEmbed;

@@ -9,6 +9,9 @@ const App = () => (
       poster="maxresdefault"
       iFrameOptions={{ playsinline: 1 }}
       iFrameProps={{ id: 'hello-world' }}
+      onIFrameAdded={() => {
+        console.log('ready');
+      }}
     />
   </div>
 );

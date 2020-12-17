@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
 import "./LiteYouTubeEmbed.css";
@@ -7,7 +7,20 @@ const qsSerialize = (o = {}) => Object.keys(o)
   .map(i =>`${encodeURIComponent(i)}=${encodeURIComponent(o[i])}`)
   .join('&');
 
-const LiteYouTubeEmbed = ({ adNetwork, id, playlist, poster, title, noCookie, activatedClass, iframeClass, playerClass, wrapperClass, iFrameOptions, iFrameProps
+const LiteYouTubeEmbed = ({ 
+  adNetwork, 
+  id, 
+  playlist, 
+  poster, 
+  title, 
+  noCookie, 
+  activatedClass, 
+  iframeClass, 
+  playerClass, 
+  wrapperClass, 
+  iFrameOptions, 
+  iFrameProps, 
+  onIFrameAdded
 }) => {
 
   const [preconnected, setPreconnected] = useState(false);
@@ -32,6 +45,12 @@ const LiteYouTubeEmbed = ({ adNetwork, id, playlist, poster, title, noCookie, ac
     if (iframe) return;
     setIframe(true);
   };
+
+  useEffect(() => {
+    if (iframe && typeof onIFrameAdded === 'function') {
+      onIFrameAdded();
+    }
+  }, [iframe, onIFrameAdded])
 
   return (
     <Fragment>
@@ -90,6 +109,7 @@ LiteYouTubeEmbed.propTypes = {
   wrapperClass: PropTypes.string,
   iFrameOptions: PropTypes.object,
   iFrameProps: PropTypes.object,
+  onIFrameAdded: PropTypes.func,
 };
 
 LiteYouTubeEmbed.defaultProps = {

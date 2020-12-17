@@ -1,5 +1,5 @@
 import _slicedToArray from "@babel/runtime/helpers/esm/slicedToArray";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import "./LiteYouTubeEmbed.css";
 
 var qsSerialize = function qsSerialize() {
@@ -21,7 +21,8 @@ var LiteYouTubeEmbed = function LiteYouTubeEmbed(_ref) {
       playerClass = _ref.playerClass,
       wrapperClass = _ref.wrapperClass,
       iFrameOptions = _ref.iFrameOptions,
-      iFrameProps = _ref.iFrameProps;
+      iFrameProps = _ref.iFrameProps,
+      onIFrameAdded = _ref.onIFrameAdded;
 
   var _useState = useState(false),
       _useState2 = _slicedToArray(_useState, 2),
@@ -50,6 +51,11 @@ var LiteYouTubeEmbed = function LiteYouTubeEmbed(_ref) {
     setIframe(true);
   };
 
+  useEffect(function () {
+    if (iframe && typeof onIFrameAdded === 'function') {
+      onIFrameAdded();
+    }
+  }, [iframe, onIFrameAdded]);
   return React.createElement(Fragment, null, React.createElement("link", {
     rel: "preload",
     href: posterUrl,
